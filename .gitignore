@@ -1,0 +1,12 @@
+# Ignore les dossiers de build Maven
+/target/
+
+# Fichiers de configuration VS Code
+.vscode/
+
+# Base SQLite (si tu ne veux pas la versionner)
+my_database.db
+
+# Fichiers système
+*.log
+*.class
