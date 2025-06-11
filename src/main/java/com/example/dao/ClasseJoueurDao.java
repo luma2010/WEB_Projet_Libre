@@ -76,12 +76,14 @@ public class ClasseJoueurDao {
 
     // Classe imbriquée statique pour envoyer le nom de la classe et le niveau associé
     public static class ClasseAvecNiveau {
-    public int id;        // id de la liaison (Classe_Joueur.ID)
+    public int idLiaison;    // id de la liaison Classe_Joueur.ID
+    public int idClasse;     // id réel de la classe
     public String nomClasse;
     public int niveau;
 
-    public ClasseAvecNiveau(int id, String nomClasse, int niveau) {
-        this.id = id;
+    public ClasseAvecNiveau(int idLiaison, int idClasse, String nomClasse, int niveau) {
+        this.idLiaison = idLiaison;
+        this.idClasse = idClasse;
         this.nomClasse = nomClasse;
         this.niveau = niveau;
     }
@@ -89,9 +91,9 @@ public class ClasseJoueurDao {
 
 
     // Récupère toutes les classes avec leur niveau pour un joueur donné
-public static List<ClasseAvecNiveau> getClassesWithNiveauByJoueurId(int idJoueur) throws SQLException {
+    public static List<ClasseAvecNiveau> getClassesWithNiveauByJoueurId(int idJoueur) throws SQLException {
     List<ClasseAvecNiveau> result = new ArrayList<>();
-    String sql = "SELECT cj.ID, c.Nom, cj.Niveau FROM Classe_Joueur cj " +
+    String sql = "SELECT cj.ID, c.ID AS idClasse, c.Nom, cj.Niveau FROM Classe_Joueur cj " +
                  "JOIN Classe c ON cj.ClasseID = c.ID " +
                  "WHERE cj.JoueurID = ?";
     try (PreparedStatement stmt = Database.getConnection().prepareStatement(sql)) {
@@ -99,17 +101,15 @@ public static List<ClasseAvecNiveau> getClassesWithNiveauByJoueurId(int idJoueur
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 result.add(new ClasseAvecNiveau(
-                    rs.getInt("ID"),        // id de la liaison Classe_Joueur.ID
-                    rs.getString("Nom"),    // nom de la classe
-                    rs.getInt("Niveau")     // niveau de la classe
+                    rs.getInt("ID"),          // id liaison
+                    rs.getInt("idClasse"),    // id classe réelle
+                    rs.getString("Nom"),
+                    rs.getInt("Niveau")
                 ));
             }
         }
     }
     return result;
 }
-
-
-
 
 }

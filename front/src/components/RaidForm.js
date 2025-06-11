@@ -121,7 +121,10 @@ function RaidForm() {
         <select value={selectedClasseLeader} onChange={e => setSelectedClasseLeader(e.target.value)} required>
           <option value="">-- Choisir votre classe --</option>
           {leaderClasses.map(classe => (
-            <option key={classe.id} value={classe.id}>{classe.nomClasse}</option>
+            <option key={classe.idClasse} value={classe.idClasse}>
+  {classe.nomClasse} (niveau {classe.niveau})
+</option>
+
           ))}
         </select>
       </label>

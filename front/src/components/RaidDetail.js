@@ -80,19 +80,27 @@ function RaidDetail() {
     }
     if (!user) {
       alert("Vous devez être connecté pour vous inscrire.");
+      console.log("userClasses (debug):");
+userClasses.forEach(c => {
+  console.log(`id: ${c.id}, idClasse: ${c.idClasse}, nomClasse: ${c.nomClasse}`);
+});
+
       return;
     }
     console.log("Classe sélectionnée :", selectedClasseId);
+    console.log("selectedClasseId (idClasse):", selectedClasseId);
+
 
     const res = await fetch(`http://localhost:7070/raids/${raid.id}/joueurs`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        idJoueur: user.id,
-        idRaid: raid.id,
-        idClasse: Number(selectedClasseId),
-      }),
-    });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    idJoueur: user.id,
+    idRaid: raid.id,
+    idClasse: Number(selectedClasseId),  // id de la classe, pas la liaison
+  }),
+});
+
 
     if (res.ok) {
       alert("Inscription réussie !");
@@ -145,12 +153,20 @@ function RaidDetail() {
       {user && (
         <div>
           <h3>S’inscrire au raid</h3>
-<select value={selectedClasseId} onChange={e => setSelectedClasseId(e.target.value)}>
+<select
+  value={selectedClasseId}
+  onChange={e => setSelectedClasseId(Number(e.target.value))}
+>
   <option value="">-- Choisissez votre classe --</option>
   {userClasses.map(c => (
-    <option key={c.id} value={c.id}>{c.nomClasse}</option>
+    <option key={c.id} value={c.idClasse}>
+      {c.nomClasse}
+    </option>
   ))}
 </select>
+
+
+
 
 
           <button onClick={handleInscription}>S’inscrire</button>

@@ -370,13 +370,18 @@ public class Main {
             int classeLeaderId = req.classeLeaderId;
 
             List<ClasseJoueurDao.ClasseAvecNiveau> leaderClasses = ClasseJoueurDao.getClassesWithNiveauByJoueurId(leaderId);
-            boolean hasClasse = leaderClasses.stream()
-                .anyMatch(c -> c.id == classeLeaderId);
+boolean hasClasse = leaderClasses.stream()
+    .anyMatch(c -> c.idClasse == classeLeaderId);
+System.out.println("Classe leader demandée : " + classeLeaderId);
+for (ClasseJoueurDao.ClasseAvecNiveau c : leaderClasses) {
+    System.out.println("Classe du leader : idClasse = " + c.idClasse + ", nom = " + c.nomClasse + ", niveau = " + c.niveau);
+}
 
-            if (!hasClasse) {
-                ctx.status(400).json(new ErrorMessage("La classe choisie ne correspond pas aux classes du leader"));
-                return;
-            }
+if (!hasClasse) {
+    ctx.status(400).json(new ErrorMessage("La classe choisie ne correspond pas aux classes du leader"));
+    return;
+}
+
 
             int raidId = RaidDao.insert(req.raid);
 
